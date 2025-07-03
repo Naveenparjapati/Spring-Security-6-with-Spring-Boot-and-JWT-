@@ -27,7 +27,7 @@ public class StrudentController {
 		return students;
 	}
 	
-	//web csrf
+	//web csrf we are genrating bcz we dont want copy frm browser
 	@GetMapping("/csrf-token")
 	public CsrfToken getCsrfToken(HttpServletRequest request)
 	{
