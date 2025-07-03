@@ -5,16 +5,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+//in this we are using UserDetailsService for verifing the user
+//in this we are using UserDetailsService for verifing the user
+//in this we are using UserDetailsService for verifing the user
 
 @Configuration
 //i dont want defoult security that provided by spring security
 @EnableWebSecurity
 public class SecurityConfig {
 
-	//1.customizer.disable()  this disabling the csr
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
@@ -24,27 +30,31 @@ public class SecurityConfig {
       .httpBasic(Customizer.withDefaults())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
 		
-		//lets check how all thinks are working
-		//CsrfConfigure is a lambda so we are creating 
-//		Customizer<CsrfConfigurer<HttpSecurity>> custCsf=new Customizer<CsrfConfigurer<HttpSecurity>>() 
-//		{
-//		
-//		@Override
-//		public void customize(CsrfConfigurer<HttpSecurity> customizer) {
-//			// TODO Auto-generated method stub
-//			customizer.disable();
-//			//http.authorizeHttpRequests(request -> request.anyRequest().authenticated());//without this we are not abel to see that authent formAccess to localhost was denied(then where we have to enter pass or user(even will try it with post men not work)		
-////			//http.formLogin(Customizer.withDefaults());//custmize rorm  (now this will work with browser as well as post m
-////			http.httpBasic(Customizer.withDefaults());
-////			http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));//if i will comment the form ligin on browser pop up will dis it will work with post m as well
-//			
-//		}
-//		};
-//		http.csrf(custCsf);
-			
-//		return http.build();
+		
 		
 	}
-			//}
+	
+	@Bean
+	public UserDetailsService userDetailsService(){
+		
+		UserDetails user1=User
+				.withDefaultPasswordEncoder()
+				.username("kiran")
+				.password("M@kiran")
+				.roles("USER")
+				.build();
+		
+		
+		UserDetails user2=User
+				.withDefaultPasswordEncoder()
+				.username("Aian")
+				.password("Y@kiran")
+				.roles("ADMIN")
+				.build();
+		
+		
+		return new InMemoryUserDetailsManager(user1,user2);
+	}
+			
 	
 }
