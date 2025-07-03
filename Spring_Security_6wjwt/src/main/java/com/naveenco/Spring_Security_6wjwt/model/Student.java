@@ -1,4 +1,4 @@
-package com.naveenco.Spring_Security_6wjwt;
+package com.naveenco.Spring_Security_6wjwt.model;
 
 public class Student {
     

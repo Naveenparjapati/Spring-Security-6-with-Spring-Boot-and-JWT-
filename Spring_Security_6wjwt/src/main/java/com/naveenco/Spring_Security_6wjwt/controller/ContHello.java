@@ -1,4 +1,4 @@
-package com.naveenco.Spring_Security_6wjwt;
+package com.naveenco.Spring_Security_6wjwt.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
