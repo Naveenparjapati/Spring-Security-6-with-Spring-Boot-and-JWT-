@@ -19,4 +19,10 @@ public class UseerController {
     	 return userService.register(user);
      }
      
+	@PostMapping("/login")
+	public String login(@RequestBody  Users user)
+	{
+		
+		return userService.verify(user);
+	}
 }
