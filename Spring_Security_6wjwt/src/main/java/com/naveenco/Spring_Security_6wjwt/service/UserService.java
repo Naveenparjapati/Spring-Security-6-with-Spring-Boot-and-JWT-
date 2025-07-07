@@ -21,7 +21,7 @@ public class UserService {
       AuthenticationManager authManager;
       
       @Autowired
-      private JWTService service;
+      private JWTService jwtservice;
       
 	public Users register(Users user) {
    	     user.setPassword(encoder.encode(user.getPassword()));
@@ -35,7 +35,7 @@ public class UserService {
 		Authentication authentication=
 				authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		if(authentication.isAuthenticated())
-			return generateToken();
+			return jwtservice.generateToken(user.getUsername());
 		
 		return "failure";
 	}
