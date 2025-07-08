@@ -1,17 +1,19 @@
 package com.naveenco.Spring_Security_6wjwt.service;
 
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -47,10 +49,53 @@ public class JWTService {
 				.compact();
 		}
 
-	private Key getkey() {
+	private SecretKey getkey() {
 		// TODO Auto-generated method stub
 		
 		byte[] keyBytes=Decoders.BASE64.decode(secretkey);
 		return Keys.hmacShaKeyFor(keyBytes) ;
 	}
+
+	
+
+	
+
+	public String extractUserName(String token) {
+		// TODO Auto-generated method stub
+		return extractClaim(token,Claims::getSubject);
+	}
+    
+	private<T> T extractClaim(String token,Function<Claims,T> claimResolver) {
+		final Claims claims= extractAllClaims(token);
+		return claimResolver.apply(claims);
+	}
+	
+	private Claims extractAllClaims(String token) {
+		// TODO Auto-generated method stub
+		return Jwts.parser()
+				.verifyWith(getkey())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
+				
+	}
+
+	public boolean validateToken(String token, UserDetails userDetails) {
+		// TODO Auto-generated method stub
+		final String userName=extractUserName(token);
+		
+	return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	}
+
+	private boolean isTokenExpired(String token) {
+		// TODO Auto-generated method stub
+		return  extractExpiration(token).before(new Date());
+	}
+
+	private Date extractExpiration(String token) {
+		// TODO Auto-generated method stub
+		return extractClaim(token, Claims::getExpiration);
+	}
+	
+	
 }
